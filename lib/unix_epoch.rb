@@ -49,7 +49,9 @@ module UnixEpoch
             delta_days = self.jd - UnixEpoch.jd_unix_epoch()
             unix_ts = delta_days * 86_400
             h, m, s = self.class.day_fraction_to_time(day_fraction)
-            unix_ts += h * 3600 + m * 60 + s
+            delta_secs = h * 3600 + m * 60 + s
+            delta_secs -= UnixEpoch.jd_fr_to_secs(offset) if offset != 0 # remove tz offset to get back to UTC
+            unix_ts += delta_secs
         end
 
         def to_i
@@ -70,7 +72,11 @@ module UnixEpoch
     end
 
     def self.get_jd_secs(jd)
-        h, m, s = DateTime.day_fraction_to_time(jd % 1)
+        jd_fr_to_secs(jd % 1)
+    end
+
+    def self.jd_fr_to_secs(fr)
+        h, m, s = DateTime.day_fraction_to_time(fr)
         (h * 3600 + m * 60 + s)
     end
 
