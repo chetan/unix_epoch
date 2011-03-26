@@ -28,6 +28,18 @@ Documentation is available online at at rdoc.info[http://rdoc.info/projects/chet
 
   sudo gem install unix_epoch
 
+== FURTHER READING:
+
+Here's some good information on various Calendar systems:
+
+* http://mysite.verizon.net/aesir_research/date/back.htm
+* https://secure.wikimedia.org/wikipedia/en/wiki/Julian_day
+* http://www.fourmilab.ch/solar/help/timedate.html
+
+And the Perl library from which I borrowed some ideas:
+
+* http://search.cpan.org/~chorny/DateTime-Format-Epoch-0.13/
+
 == LICENSE:
 
 (The MIT License)
