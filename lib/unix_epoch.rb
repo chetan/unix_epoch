@@ -1,0 +1,99 @@
+
+# concept borrowed from Perl's DateTime::Format::Epoch on CPAN
+# instead of Rata Die (RD), we use Julian Date (JD), which is
+# better understood by Ruby's DateTime library
+
+require 'date'
+
+module UnixEpoch
+
+    module ClassMethods
+
+        # unix_ts = seconds since unix epoch (1970-01-01 00:00:00 UTC)
+        # offset  = offset in seconds from UTC time
+        #
+        # note, offset will be used for properly converting the given unix_ts to localtime
+        def from_unix_ts(unix_ts, offset = 0)
+
+            # step 1) get the delta in days, seconds and nano seconds represented by unix_ts
+
+            delta_days = UnixEpoch._floor(unix_ts / 86_400)
+            unix_ts -= delta_days * 86_400
+
+            # unix_ts cannot be negative now, so to_i instead of _floor()
+            delta_secs = unix_ts.to_i
+            unix_ts -= delta_secs
+
+            delta_nano = unix_ts / 1e9
+
+            # step 2) add these deltas to the jd day and jd sec representation of the unix epoch
+
+            epoch_jd = UnixEpoch.jd_unix_epoch()
+
+            epoch_jd_days = epoch_jd.to_i
+            epoch_secs = UnixEpoch.get_jd_secs(epoch_jd) # get left over seconds from our epoch
+
+            jd_days = epoch_jd_days + delta_days
+
+            secs = epoch_secs + delta_secs + offset # add tz offset back in also
+            jd_secs = UnixEpoch.secs_to_jd_secs(secs) + Rational(delta_nano.round, 86_400_000_000)
+
+            return DateTime.from_jd(jd_days, jd_secs, offset)
+        end
+
+    end
+
+    module InstanceMethods
+
+        def to_unix_ts
+            delta_days = self.jd - UnixEpoch.jd_unix_epoch()
+            unix_ts = delta_days * 86_400
+            h, m, s = self.class.day_fraction_to_time(day_fraction)
+            unix_ts += h * 3600 + m * 60 + s
+        end
+
+        def to_i
+            self.to_unix_ts
+        end
+
+    end
+
+
+    private
+
+    def self.jd_unix_epoch
+        Date.civil(1970, 1, 1).jd
+    end
+
+    def self.secs_to_jd_secs(secs)
+      Rational(secs, 86_400)
+    end
+
+    def self.get_jd_secs(jd)
+        h, m, s = DateTime.day_fraction_to_time(jd % 1)
+        (h * 3600 + m * 60 + s)
+    end
+
+    def self._floor(x)
+        ix = x.to_i
+        if ix <= x then
+            return ix
+        end
+        return ix - 1
+    end
+
+end
+
+class DateTime
+
+    extend UnixEpoch::ClassMethods
+    include UnixEpoch::InstanceMethods
+
+    # Create a new DateTime object from a given JD
+    #
+    # +sg+ specifies the Day of Calendar Reform.
+    def self.from_jd(jd, fr, of = 0, sg=ITALY)
+        of = Rational(of, 86_400) if of != 0 and not of.kind_of? Rational
+        new!(jd_to_ajd(jd, fr, of), of, sg)
+    end
+end
