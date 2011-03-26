@@ -12,14 +12,24 @@ Gem::Specification.new do |s|
   s.date = %q{2011-03-26}
   s.description = %q{Adds from_unix_ts and to_unix_ts methods to the DateTime class}
   s.email = %q{chetan@pixelcop.net}
+  s.extra_rdoc_files = [
+    "README.rdoc"
+  ]
   s.files = [
+    "README.rdoc",
+    "Rakefile",
     "VERSION",
-    "lib/unix_epoch.rb"
+    "lib/unix_epoch.rb",
+    "test/unix_epoch_test.rb",
+    "unix_epoch.gemspec"
   ]
   s.homepage = %q{http://github.com/chetan/unix_epoch}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.5.0}
   s.summary = %q{Adds methods to DateTime for dealing with Unix Timestamps}
+  s.test_files = [
+    "test/unix_epoch_test.rb"
+  ]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
