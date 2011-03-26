@@ -9,10 +9,11 @@ module UnixEpoch
 
     module ClassMethods
 
-        # unix_ts = seconds since unix epoch (1970-01-01 00:00:00 UTC)
-        # offset  = offset in seconds from UTC time
+        # Create a new DateTime object from a given Unix Timestamp
         #
-        # note, offset will be used for properly converting the given unix_ts to localtime
+        # @param [Fixnum, Bignum] unix_ts       seconds since unix epoch (1970-01-01 00:00:00 UTC)
+        # @param [Fixnum] offset        offset in seconds from UTC time
+        # @return [DateTime]            DateTime object representation of the given Unix TS
         def from_unix_ts(unix_ts, offset = 0)
 
             # step 1) get the delta in days, seconds and nano seconds represented by unix_ts
@@ -45,6 +46,10 @@ module UnixEpoch
 
     module InstanceMethods
 
+        # Converts the current Date & Time into a Fixnum or Bignum representing
+        # the Unix Timestamp
+        #
+        # @return [Fixnum, Bignum]      unix timestamp
         def to_unix_ts
             delta_days = self.jd - UnixEpoch.jd_unix_epoch()
             unix_ts = delta_days * 86_400
@@ -54,6 +59,7 @@ module UnixEpoch
             unix_ts += delta_secs
         end
 
+        # (see #to_unix_ts)
         def to_i
             self.to_unix_ts
         end
@@ -63,18 +69,32 @@ module UnixEpoch
 
     private
 
+    # Returns a Julian Date representing the Unix Epoch (January 1, 1970 00:00:00 UTC)
+    #
+     # @return [Fixnum]  Julian Date representing the Unix Epoch
     def self.jd_unix_epoch
         Date.civil(1970, 1, 1).jd
     end
 
+    # Convert the given number of seconds into a JD fraction
+    #
+    # @return [Rational]    JD fraction representing the time
     def self.secs_to_jd_secs(secs)
       Rational(secs, 86_400)
     end
 
+    # Retrieve the seconds part of the given Julian Date
+	#
+	# @param [Float]	Julian Date including fractional value (e.g., 2455647.543)
+	# @return [Fixnum]	Number of seconds represented by the fractional value
     def self.get_jd_secs(jd)
         jd_fr_to_secs(jd % 1)
     end
 
+    # Convert the given Julian Date fractional value into seconds
+	#
+	# @param [Float]	Julian Date fractional value (e.g., 0.543)
+	# @return [Fixnum]	Number of seconds represented by the fractional value
     def self.jd_fr_to_secs(fr)
         h, m, s = DateTime.day_fraction_to_time(fr)
         (h * 3600 + m * 60 + s)
