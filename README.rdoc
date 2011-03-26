@@ -1,0 +1,54 @@
+= unix_epoch
+
+* http://github.com/chetan/unix_epoch
+
+== DESCRIPTION:
+
+Ruby library that adds the following methods to the DateTime class for handling
+Unix timestamps.
+
+  * from_unix_ts(unix_ts, offset)
+  * to_unix_ts()
+  * to_i()
+
+One advantage of using this library over Time.at() is the correct handling of
+very large dates (> 2038) on 32-bit systems.
+
+== DOCUMENTATION:
+
+Documentation is available online at at rdoc.info[http://rdoc.info/projects/chetan/unix_epoch]
+
+== SYNOPSIS:
+
+  require "unix_epoch"
+  dt = DateTime.from_unix_ts(1301103992)
+  dt.to_i == 1301103992
+
+== INSTALL:
+
+  sudo gem install unix_epoch
+
+== LICENSE:
+
+(The MIT License)
+
+Copyright (c) 2011 Pixelcop Research, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
