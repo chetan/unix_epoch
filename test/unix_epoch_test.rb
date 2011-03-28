@@ -1,6 +1,8 @@
 
+require 'rubygems'
 require 'test/unit'
 require 'unix_epoch'
+require 'timezone_local'
 
 class UnixEpoch_Test < Test::Unit::TestCase
 
@@ -40,5 +42,11 @@ class UnixEpoch_Test < Test::Unit::TestCase
         assert d.strftime(@f) == t.strftime(@f)
         assert t.to_i == i
         assert d.to_unix_ts == i
+    end
+
+    def test_from_unix_ts_with_tzinfo
+        tz = TZInfo::Timezone.get_local_timezone
+        i = 1301103992
+        assert DateTime.from_unix_ts(i, tz).strftime(@f) == Time.at(i).strftime(@f)
     end
 end

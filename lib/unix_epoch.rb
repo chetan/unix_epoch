@@ -4,6 +4,7 @@
 # better understood by Ruby's DateTime library
 
 require 'date'
+require 'tzinfo'
 
 module UnixEpoch
 
@@ -12,9 +13,13 @@ module UnixEpoch
         # Create a new DateTime object from a given Unix Timestamp
         #
         # @param [Fixnum, Bignum] unix_ts       seconds since unix epoch (1970-01-01 00:00:00 UTC)
-        # @param [Fixnum] offset        offset in seconds from UTC time
+        # @param [Fixnum, TZInfo::Timezone] offset        offset in seconds from UTC time or an instance of TZInfo::TimeZone
         # @return [DateTime]            DateTime object representation of the given Unix TS
         def from_unix_ts(unix_ts, offset = 0)
+
+            if not (offset.respond_to? :to_i or offset.kind_of? TZInfo::Timezone) then
+                raise "Invalid value passed for offset: must be an integer or TZInfo::Timezone"
+            end
 
             # step 1) get the delta in days, seconds and nano seconds represented by unix_ts
 
@@ -36,10 +41,19 @@ module UnixEpoch
 
             jd_days = epoch_jd_days + delta_days
 
-            secs = epoch_secs + delta_secs + offset # add tz offset back in also
+            secs = epoch_secs + delta_secs
+            if offset.respond_to? :to_i
+                secs += offset # add tz offset back in also
+            end
             jd_secs = UnixEpoch.secs_to_jd_secs(secs) + Rational(delta_nano.round, 86_400_000_000)
 
-            return DateTime.from_jd(jd_days, jd_secs, offset)
+            if offset.respond_to? :to_i
+                return DateTime.from_jd(jd_days, jd_secs, offset)
+            elsif offset.kind_of? TZInfo::Timezone
+                dt = DateTime.from_jd(jd_days, jd_secs, 0) # first create a new DateTime
+                ldt = offset.utc_to_local(dt) # then convert it to our target TZ
+                return DateTime.from_jd(ldt.jd, ldt.day_fraction, (ldt.to_i - dt.to_i)) # then create a new DateTime with the current offset
+            end
         end
 
     end
