@@ -2,7 +2,13 @@
 require 'rubygems'
 require 'test/unit'
 require 'unix_epoch'
-require 'timezone_local'
+
+begin
+    require 'timezone_local'
+rescue => ex
+    puts "error: timezone_local gem is required for running tests"
+    exit
+end
 
 class UnixEpoch_Test < Test::Unit::TestCase
 

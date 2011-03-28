@@ -9,6 +9,7 @@ begin
     gemspec.email = "chetan@pixelcop.net"
     gemspec.homepage = "http://github.com/chetan/unix_epoch"
     gemspec.authors = ["Chetan Sarva"]
+    gemspec.add_dependency('tzinfo', '>= 0.3.24')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
