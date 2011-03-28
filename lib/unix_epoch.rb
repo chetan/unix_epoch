@@ -84,17 +84,17 @@ module UnixEpoch
     end
 
     # Retrieve the seconds part of the given Julian Date
-	#
-	# @param [Float]	Julian Date including fractional value (e.g., 2455647.543)
-	# @return [Fixnum]	Number of seconds represented by the fractional value
+    #
+    # @param [Float]    Julian Date including fractional value (e.g., 2455647.543)
+    # @return [Fixnum]  Number of seconds represented by the fractional value
     def self.get_jd_secs(jd)
         jd_fr_to_secs(jd % 1)
     end
 
     # Convert the given Julian Date fractional value into seconds
-	#
-	# @param [Float]	Julian Date fractional value (e.g., 0.543)
-	# @return [Fixnum]	Number of seconds represented by the fractional value
+    #
+    # @param [Float]    Julian Date fractional value (e.g., 0.543)
+    # @return [Fixnum]  Number of seconds represented by the fractional value
     def self.jd_fr_to_secs(fr)
         h, m, s = DateTime.day_fraction_to_time(fr)
         (h * 3600 + m * 60 + s)
