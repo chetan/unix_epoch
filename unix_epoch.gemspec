@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{unix_epoch}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chetan Sarva"]
-  s.date = %q{2011-03-26}
+  s.date = %q{2011-03-28}
   s.description = %q{Adds from_unix_ts and to_unix_ts methods to the DateTime class}
   s.email = %q{chetan@pixelcop.net}
   s.extra_rdoc_files = [
@@ -25,16 +25,17 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/chetan/unix_epoch}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.0}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Adds methods to DateTime for dealing with Unix Timestamps}
   s.test_files = [
     "test/unix_epoch_test.rb"
   ]
 
   if s.respond_to? :specification_version then
+    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
     else
     end
   else
